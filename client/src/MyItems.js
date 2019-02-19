@@ -1,9 +1,7 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import gql from "graphql-tag";
-import { ApolloProvider, Query } from "react-apollo";
-
-/*import Login from "./Login"*/
+import { Query } from "react-apollo";
 
 
 
@@ -53,7 +51,7 @@ const MyItems = () => {
               <p> Item: {title} </p>
               <p> Description: {description != null ? description : 'None'} </p>
               <p> Borrower: {borrower != null ? borrower.username : 'None'} </p>
-              <p> Tags: {new_tags !="" ? new_tags : 'None'} </p>
+              <p> Tags: {new_tags !=="" ? new_tags : 'None'} </p>
             </div>
           )})
         }}

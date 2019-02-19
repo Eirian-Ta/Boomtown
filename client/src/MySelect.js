@@ -1,10 +1,7 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import gql from "graphql-tag";
 import { Query } from "react-apollo";
-import { Formik } from 'formik';
-import * as Yup from 'yup';
 
 import Select from 'react-select';
 

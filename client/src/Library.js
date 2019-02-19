@@ -1,7 +1,6 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import gql from "graphql-tag";
-import { ApolloProvider, Query } from "react-apollo";
+import { Query } from "react-apollo";
 
 import BorrowButton from "./BorrowButton"
 
@@ -53,7 +52,7 @@ const Library = () => {
 
 
           return data.items.map(({id, title, description, owner, borrower, tags}) => {
-            if (owner.id != data.viewer.id && borrower == null) {
+            if (owner.id !== data.viewer.id && borrower == null) {
               const new_tags = tags.map(({tagname}) => tagname).join(', ');
 
             return (    

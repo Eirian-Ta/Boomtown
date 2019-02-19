@@ -1,7 +1,7 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
 import gql from "graphql-tag";
-import { ApolloProvider, Query } from "react-apollo";
+import { Query } from "react-apollo";
 
 import ReturnButton from "./ReturnButton";
 

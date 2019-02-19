@@ -1,9 +1,6 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import gql from "graphql-tag";
-import { ApolloProvider, Mutation } from "react-apollo";
-
-import { MuiThemeProvider, createMuiTheme, Button } from '@material-ui/core'
+import { Mutation } from "react-apollo";
 
 
 const RETURN_ITEM = gql`

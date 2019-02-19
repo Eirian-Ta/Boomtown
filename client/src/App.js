@@ -1,31 +1,22 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import ApolloClient from "apollo-boost";
-import { ApolloProvider } from "react-apollo";
 
-import { MuiThemeProvider, createMuiTheme, Button } from '@material-ui/core'
-/*import { MutiThemeProvider } from '@material-ui/icons'*/
+import { ApolloProvider } from "react-apollo";
+import apolloClient from './apolloClient'
+
+import { MuiThemeProvider, createMuiTheme  } from '@material-ui/core'
+
 
 import Login from "./Login"
 import Signup from "./Signup"
-/*import ShowKitten from "./ShowKitten"*/
-
-
-
-import './App.css';
-
-
-import Dashboard from './Dashboard'
 import Sidebar from './Sidebar'
-
 import MyItems from './MyItems'
 import Borrowing from './Borrowing'
 import Library from './Library'
-
 import AddItemForm from './AddItemForm'
 
-import apolloClient from './apolloClient'
+import './App.css';
 
 /*const client = new ApolloClient({
   uri: "http://localhost:8080/graphql"
