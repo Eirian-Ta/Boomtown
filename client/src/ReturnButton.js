@@ -32,7 +32,7 @@ const ReturnButton = ({itemID}) => {
           }}
 
          onError={(error) => 
-         alert('error')}
+         alert('Item has been returned')}
           >
           
           {(returnItem, { data }) => (
@@ -43,6 +43,7 @@ const ReturnButton = ({itemID}) => {
               e.preventDefault();
               returnItem({ variables: { ItemID: itemID } });
               itemID = "";
+              window.location="/Borrowing";
             }}
           >
             <button type="submit">Return</button>

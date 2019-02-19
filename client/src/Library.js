@@ -53,7 +53,7 @@ const Library = () => {
 
 
           return data.items.map(({id, title, description, owner, borrower, tags}) => {
-            if (owner.id != data.viewer.id) {
+            if (owner.id != data.viewer.id && borrower == null) {
               const new_tags = tags.map(({tagname}) => tagname).join(', ');
 
             return (    
@@ -64,7 +64,6 @@ const Library = () => {
               <p> Tags: {new_tags} </p>
               <BorrowButton 
                 itemID={id}
-                borrowerID={data.viewer.id}
               />
             </div>
           )

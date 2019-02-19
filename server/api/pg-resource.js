@@ -15,10 +15,10 @@ function tagsQueryString(tags, itemid, result) {
 module.exports = (postgres) => {
   return {
     //Later
-    async createUser({ fullname, email, password }) {
+    async createUser({ username, email, password }) {
       const newUserInsert = {
-        text: '', // @TODO: Authentication - Server //select * from users where fullname = $1
-        values: [fullname, email, password]
+        text: 'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *', // @TODO: Authentication - Server 
+        values: [username, email, password]
       };
       try {
         const user = await postgres.query(newUserInsert);
@@ -30,24 +30,20 @@ module.exports = (postgres) => {
           case /users_email_key/.test(e.message):
             throw 'An account with this email already exists.';
           default:
-            throw 'There was a problem creating your account.';
+            throw new Error(e);
         }
       }
     },
     //Later
     async getUserAndPasswordForVerification(email) {
       const findUserQuery = {
-        text: '', // @TODO: Authentication - Server
+        text: 'SELECT * FROM users WHERE email = $1', // @TODO: Authentication - Server
         values: [email]
       };
-      try {
         const user = await postgres.query(findUserQuery);
         if (!user) throw 'User was not found.';
         return user.rows[0];
-      } catch (e) {
-        throw 'User was not found.';
-      }
-    },
+     },
     async getUserById(id) {
       const findUserQuery = {
         text: 'SELECT * FROM users WHERE id = $1', // @TODO: Basic queries
@@ -139,7 +135,45 @@ module.exports = (postgres) => {
         });
         throw e;
       }
+    },
+
+
+
+    //return
+    async resetBorrowerIDforReturnItem(id) {
+      const items = await postgres.query({
+        text: 'UPDATE items SET borrowerid=null WHERE id=$1 RETURNING *',
+        values: [id]
+      });
+      return items.rows;
+    },
+
+    //borrow
+      async setBorrowerIDforItem({itemID, borrowerID}) {
+        // itemid = {    
+        //     itemID: 2
+        //     borrowerID: 3
+        //     ownerID: 3
+        //   }
+        console.log('The Item ID is: ', itemID);
+        console.log('The borrower ID is: ', borrowerID);
+      const items = await postgres.query({
+        text: 'UPDATE items SET borrowerid=$2 WHERE id=$1 AND borrowerid IS NULL RETURNING *',
+        values: [itemID,borrowerID]
+      });
+
+      console.log('items result ', items)
+
+      if (items.rows.length === 0) {
+        //alert('Item has been borrowed')
+      }
+      // if (error) {
+      //   //alert('There is an error setting borrower ID for item')
+      // }
+      return items.rows[0];
     }
+    
+    
   }
 }
 

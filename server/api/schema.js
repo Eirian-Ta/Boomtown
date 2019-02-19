@@ -19,6 +19,9 @@ module.exports = gql`
     username: String!
     items: [Item]
     borrowed: [Item]
+    email: String!
+    password: String!
+    bio: String
   }
 
   type Tag {
@@ -30,11 +33,33 @@ module.exports = gql`
 
   input NewItemInput {
     title: String!
-    imageURL: String
     description: String!
-    ownerID: ID!
     borrowerID: ID
     tagIDs: [ID!] 
+  }
+
+
+  input NewUserInput {
+    username: String!
+    email: String!
+    password: String!
+    bio: String
+
+  }
+
+  input LoginInput {
+    email: String!
+    password: String!
+  }
+
+  
+  input BorrowItemInput {
+    itemID: ID!
+  }
+
+  type LoginResponse {
+    csrfToken: String!
+    user: User!
   }
 
   type Query {
@@ -46,5 +71,9 @@ module.exports = gql`
 
   type Mutation {
     addItem(input: NewItemInput!):Item!
+    signup(input: NewUserInput!): LoginResponse!
+    login(input: LoginInput!): LoginResponse!
+    returnItem(input: ID!): Item!
+    borrowItem(input: BorrowItemInput!): Item!
   }
 `;

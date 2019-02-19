@@ -16,8 +16,9 @@
 const { ApolloError } = require('apollo-server-express');
 
 // @TODO: Uncomment these lines later when we add auth
-// const jwt = require("jsonwebtoken")
-// const authMutations = require("./auth")
+ const jwt = require("jsonwebtoken")
+const authMutations = require("./auth")
+const authenticate = require("../authenticate")
 // -------------------------------
 const { UploadScalar, DateScalar } = require('../custom-types');
 
@@ -27,7 +28,7 @@ module.exports = (app) => {
     // Date: DateScalar,
 
     Query: {
-      viewer() {
+      async viewer(parent, args, context) {
         /**
          * @TODO: Authentication - Server
          *
@@ -42,9 +43,16 @@ module.exports = (app) => {
          *  the token's stored user here. If there is no token, the user has signed out,
          *  in which case you'll return null
          */
-        return null;
+
+         const userID = authenticate(app, context.req)
+         // const userID = 1
+
+         const user = await context.pgResource.getUserById(userID)
+
+        return user;
       },
-      async user(parent, { id }, { pgResource }, info) {
+      async user(parent, { id }, { pgResource, req }, info) {
+        authenticate(app, req)
         try {
           const user = await pgResource.getUserById(id);
           return user;
@@ -52,7 +60,8 @@ module.exports = (app) => {
           throw new ApolloError(e);
         }
       },
-      async items(parent, { filter }, { pgResource }, info) {
+      async items(parent, { filter }, { pgResource, req }, info) {
+        authenticate(app, req)
         try {
           const items = await pgResource.getItems(filter);
           return items;
@@ -61,7 +70,8 @@ module.exports = (app) => {
         }
       },
 
-      async tags(parent, {}, { pgResource }, info) {
+      async tags(parent, {}, { pgResource, req }, info) {
+        authenticate(app, req)
         try {
           const tags = await pgResource.getTags();
           return tags;
@@ -123,17 +133,40 @@ module.exports = (app) => {
     },
 
     Mutation: {
-      // @TODO: Uncomment this later when we add auth
-      // ...authMutations(app),
+       ...authMutations(app),
       // -------------------------------
 
-      async addItem(parent, args, context, info) {
-
-        const newItem = await context.pgResource.saveNewItem(
+      async addItem(parent, args, { pgResource, req }, info) {
+        args.input.ownerID = authenticate(app, req)
+        const newItem = await pgResource.saveNewItem(
           args.input
         );
         return newItem;
-      }
+      },
+
+        async returnItem(parent, args, { pgResource, req }, info) {
+          console.log(args.input)
+          args.input.ownerID = authenticate(app, req)
+          console.log(args.input)
+          const newItem = await pgResource.resetBorrowerIDforReturnItem(
+          args.input
+        );
+        return newItem;
+      },
+
+        async borrowItem(parent, args, { pgResource, req }, info) {
+          // args.input = {    
+          //   itemID: 2
+          //   borrowerID: 3
+          // }console.log(args.input)
+
+          args.input.borrowerID = authenticate(app, req)
+          console.log(args.input)
+          const newItem = await pgResource.setBorrowerIDforItem(
+          args.input
+        );
+        return newItem;
+      },
     }
   };
 };

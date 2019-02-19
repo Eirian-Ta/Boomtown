@@ -62,10 +62,10 @@ module.exports = (app) => {
     app.use(fallback('index.html', { root }));
   }
 
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV !== 'production') {
     // Allow requests from dev server address
     const corsConfig = {
-      origin: 'http://localhost:3000',
+      origin: true,
       credentials: true
     };
     app.set('CORS_CONFIG', corsConfig);

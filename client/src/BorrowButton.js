@@ -32,8 +32,10 @@ const BorrowButton = ({ itemID, borrowerID }) => {
             console.log(data);
              }}
 
-         onError={(error) => 
-         alert('error')}
+         onError={(error) => {
+          console.log(error);
+         alert('Item has been borrowed')}}
+          
           >
           
           {(borrowItem, { data }) => (
@@ -43,8 +45,8 @@ const BorrowButton = ({ itemID, borrowerID }) => {
             onSubmit={e => {
               console.log(data);
               e.preventDefault();
-              borrowItem({ variables: {BorrowItemInput : { itemID: itemID,  borrowerID: borrowerID} }});
-              
+              borrowItem({ variables: {BorrowItemInput : { itemID: itemID} }});
+              window.location="/Library";
             }}
           >
             <button type="submit">Borrow</button>
